@@ -6,12 +6,12 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainServ
   $scope.input = "";
   $scope.msg_history = [];
 
-  $scope.register = function() {
+  $scope.submit_name = function() {
     if ($scope.name_input != "") {
       var obj = {
         name: $scope.name_input
       }
-      MainService.register(obj)
+      MainService.submit_name(obj)
         .then(function(data) {
           $scope.date = data.date;
           $scope.name = data.name;

@@ -2,7 +2,7 @@ angular.module('MainServ', []).factory('MainService', ['$q', '$timeout', '$http'
 
   return {
 
-    register : function(obj) {
+    submit_name : function(obj) {
       return $http.post('/eliza', obj)
         .then(function(data) {
           // console.log(data);

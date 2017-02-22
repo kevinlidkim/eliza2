@@ -28,7 +28,7 @@ generate_nonsense = function(input_case) {
   }
 }
 
-exports.register = function(req, res) {
+exports.submit_name = function(req, res) {
   date = moment().format("MMMM Do YYYY")
   // console.log(req.body.name);
   var obj = { 

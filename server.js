@@ -5,7 +5,7 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 var session        = require('express-session');
 
-var port = process.env.PORT || 80; // set our port
+var port = process.env.PORT || 3000; // set our port
 
 // get all data/stuff of the body (POST) parameters
 app.use(bodyParser.json()); // parse application/json 
