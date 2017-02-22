@@ -50,3 +50,11 @@ exports.send_text = function(req, res) {
     eliza: output
   })
 }
+
+exports.add_user = function(req, res) {
+  console.log(req.body);
+}
+
+exports.verify = function(req, res) {
+  
+}

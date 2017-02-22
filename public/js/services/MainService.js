@@ -16,6 +16,13 @@ angular.module('MainServ', []).factory('MainService', ['$q', '$timeout', '$http'
           // console.log(data);
           return data.data;
         })
+    },
+
+    signup : function(obj) {
+      return $http.post('/adduser', obj)
+        .then(function(data) {
+          console.log(data);
+        })
     }
     
   }

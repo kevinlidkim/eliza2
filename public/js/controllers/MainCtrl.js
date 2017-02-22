@@ -6,6 +6,10 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainServ
   $scope.input = "";
   $scope.msg_history = [];
 
+  $scope.username_input = "";
+  $scope.password_input = "";
+  $scope.email_input = "";
+
   $scope.submit_name = function() {
     if ($scope.name_input != "") {
       var obj = {
@@ -47,6 +51,26 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainServ
     } else {
       return false;
     }
+  }
+
+  $scope.empty_signup = function() {
+    if ($scope.username_input != "" && $scope.password_input != "" && $scope.email_input != "") {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  $scope.register = function() {
+    var obj = {
+      username: $scope.username_input,
+      password: $scope.password_input,
+      email: $scope.email_input
+    }
+    $scope.username_input = "";
+    $scope.password_input = "";
+    $scope.email_input = "";
+    console.log(obj);
   }
   
 }]);

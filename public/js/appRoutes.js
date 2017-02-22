@@ -3,7 +3,8 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
 	$routeProvider
 
 		.when('/', {
-			templateUrl: 'views/hw0.html'
+			templateUrl: 'views/signup.html',
+			controller: 'MainController'
 		})
 
 		.when('/hw0.html', {
@@ -17,6 +18,11 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
 
 		.when('/eliza/DOCTOR', {
 			templateUrl: 'views/doctor.html',
+			controller: 'MainController'
+		})
+
+		.when('/signup', {
+			templateUrl: 'views/signup.html',
 			controller: 'MainController'
 		})
 
