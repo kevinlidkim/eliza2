@@ -15,6 +15,8 @@ node_modules
 node_modules/
 public/libs
 
+data/
+
 # Configuration Files
 /config/secret.json
 

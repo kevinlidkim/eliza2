@@ -70,7 +70,8 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainServ
     $scope.username_input = "";
     $scope.password_input = "";
     $scope.email_input = "";
-    console.log(obj);
+
+    // MainService.
   }
   
 }]);
