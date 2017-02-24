@@ -9,6 +9,8 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainServ
   $scope.username_input = "";
   $scope.password_input = "";
   $scope.email_input = "";
+  $scope.verify_input = "";
+  $scope.verify_email_input = "";
 
   $scope.submit_name = function() {
     if ($scope.name_input != "") {
@@ -67,11 +69,29 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainServ
       password: $scope.password_input,
       email: $scope.email_input
     }
+    $scope.verify_email_input = $scope.email_input;
     $scope.username_input = "";
     $scope.password_input = "";
     $scope.email_input = "";
 
-    // MainService.
+    MainService.signup(obj);
+  }
+
+  $scope.empty_verify = function() {
+    if ($scope.verify_input != "" && $scope.verify_email_input != "") {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  $scope.verify_user = function() {
+    var obj = {
+      email: $scope.verify_email_input,
+      key: $scope.verify_input
+    }
+
+    MainService.verify_user(obj);
   }
   
 }]);

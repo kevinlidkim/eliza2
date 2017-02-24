@@ -23,6 +23,13 @@ angular.module('MainServ', []).factory('MainService', ['$q', '$timeout', '$http'
         .then(function(data) {
           console.log(data);
         })
+    },
+
+    verify_user : function(obj) {
+      return $http.post('/verify', obj)
+        .then(function(data) {
+          console.log(data);
+        })
     }
     
   }
