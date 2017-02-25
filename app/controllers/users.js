@@ -80,7 +80,7 @@ exports.create = function(req, res) {
 exports.add_user = function(req, res) {
   var collection = db.get().collection('users');
   collection.findOne({
-    $or [{ email: req.body.email }, { username: req.body.username }]
+    $or: [{ email: req.body.email }, { username: req.body.username }]
   })
     .then(function(user) {
       if (user) {
@@ -101,7 +101,8 @@ exports.add_user = function(req, res) {
         })
           .then(function(data) {
             return res.status(200).json({
-              status: 'Successfully created user'
+              status: 'Successfully created user',
+              data: data
             })
           })
           .catch(function(err) {
@@ -120,7 +121,12 @@ exports.verify = function(req, res) {
     email: req.body.email
   })
     .then(function(user) {
-      if (user.verified == true) {
+      if (!user) {
+        return res.status(500).json({
+          status: "Email not in use"
+        })
+      }
+      else if (user.verified == true) {
         return res.status(500).json({
           status: 'User already verified'
         })
@@ -132,8 +138,7 @@ exports.verify = function(req, res) {
           )
             .then(function(data) {
               return res.status(200).json({
-                status: 'Successfully verified user',
-                data: data
+                status: 'Successfully verified user'
               })
               .catch(function(err) {
                 console.log(err);
@@ -143,11 +148,17 @@ exports.verify = function(req, res) {
               })
             })
         } else {
-          return res.status(500).json({
+          return res.status(401).json({
             status: 'Invalid verification token'
           })
         }
       }
+    })
+    .catch(function(error) {
+      console.log(error);
+      return res.status(500).json({
+        status: 'Error finding user in database'
+      })
     })
 }
 

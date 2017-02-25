@@ -88,7 +88,7 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainServ
   $scope.verify_user = function() {
     var obj = {
       email: $scope.verify_email_input,
-      key: $scope.verify_input
+      random_key: $scope.verify_input
     }
 
     MainService.verify_user(obj);
