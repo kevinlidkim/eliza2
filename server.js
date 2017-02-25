@@ -34,11 +34,7 @@ app.use(methodOverride('X-HTTP-Method-Override')); // override with the X-HTTP-M
 app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
 
 // routes ==================================================
-require('./app/routes')(app, passport); // pass our application into our routes
-app.use(session({ secret: 'secretsecret' })); // session secret
-app.use(passport.initialize());
-app.use(passport.session());
-// require('./passport')(passport);
+require('./app/routes')(app); // pass our application into our routes
 
 // start app ===============================================
 app.listen(port); 

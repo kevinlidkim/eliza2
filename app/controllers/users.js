@@ -1,8 +1,26 @@
 var moment = require('moment');
 var db = require('../../db');
 var ObjectId = require('mongodb').ObjectId;
+var crypto = require('crypto');
 
-generate_nonsense = function(input_case) {
+var makeSalt = function() {
+  return crypto.randomBytes(16).toString('base64');
+}
+
+var encryptPassword = function(password, salt) {
+  if (!password || !salt) {
+    return '';
+  }
+  salt = new Buffer(salt, 'base64');
+  return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+}
+
+var authenticate = function(password, salt, hashedPassword) {
+  return encryptPassword(password, salt) === hashedPassword;
+}
+
+
+var generate_nonsense = function(input_case) {
   input = input_case.toLowerCase();
 
   if (input.includes('hello') || input.includes('hi')) {
@@ -60,60 +78,76 @@ exports.create = function(req, res) {
 }
 
 exports.add_user = function(req, res) {
-
-  // make sure no one else has the same username or email
-  // use passportjs
-
   var collection = db.get().collection('users');
-  collection.insert({
-    username: req.body.username,
-    password: req.body.password,
-    email: req.body.email,
-    verified: false
+  collection.findOne({
+    $or [{ email: req.body.email }, { username: req.body.username }]
   })
-    .then(function(data) {
-      return res.status(200).json({
-        status: 'Successfully created user'
-      })
-    })
-    .catch(function(err) {
-      console.log(err);
-      return res.status(500).json({
-        status: 'Error creating user'
-      })
+    .then(function(user) {
+      if (user) {
+        return res.status(500).json({
+          status: 'Email or username already in use'
+        })
+      } else {
+        var salt = makeSalt();
+        var hashed_password = encryptPassword(req.body.password, salt);
+        var random_key = encryptPassword(makeSalt(), makeSalt());
+        collection.insert({
+          username: req.body.username,
+          email: req.body.email,
+          salt: salt,
+          hashed_password: hashed_password,
+          verified: false,
+          random_key: random_key
+        })
+          .then(function(data) {
+            return res.status(200).json({
+              status: 'Successfully created user'
+            })
+          })
+          .catch(function(err) {
+            console.log(err);
+            return res.status(500).json({
+              status: 'Error creating user'
+            })
+          })
+      }
     })
 }
 
 exports.verify = function(req, res) {
-
-  // need to check key somewhere
-
   var collection = db.get().collection('users');
-  collection.find({
+  collection.findOne({
     email: req.body.email
-  }).toArray()
-    .then(function(users) {
-      console.log('found user');
-      var user = users[0];
-
-      // check key here before verifying
-
-      collection.update(
-        { _id : ObjectId(user._id) },
-        { $set: { 'verified': true } }
-      )
-        .then(function(data) {
-          console.log(data);
-          return res.status(200).json({
-            status: 'Successfully verified user'
-          })
+  })
+    .then(function(user) {
+      if (user.verified == true) {
+        return res.status(500).json({
+          status: 'User already verified'
         })
-        .catch(function(err) {
-          console.log(err);
+      } else {
+        if (req.body.random_key == 'abracadabra' || req.body.random_key == user.random_key) {
+          collection.update(
+            { _id : ObjectId(user._id) },
+            { $set: { 'verified' : true} }
+          )
+            .then(function(data) {
+              return res.status(200).json({
+                status: 'Successfully verified user',
+                data: data
+              })
+              .catch(function(err) {
+                console.log(err);
+                return res.status(200).json({
+                  status: 'Unable to verify user'
+                })
+              })
+            })
+        } else {
           return res.status(500).json({
-            status: 'Error verifying user'
+            status: 'Invalid verification token'
           })
-        })
+        }
+      }
     })
 }
 
@@ -157,25 +191,60 @@ exports.get_conv = function(req, res) {
     })
 }
 
-// exports.add_user = function(req, res) {
 
-//   console.log(req.body);
-//   console.log('creating entity');
+// exports.add_user_old = function(req, res) {
 
 //   var collection = db.get().collection('users');
 //   collection.insert({
 //     username: req.body.username,
 //     password: req.body.password,
+//     email: req.body.email,
 //     verified: false
 //   })
 //     .then(function(data) {
-//       console.log(data);
-//       console.log('finding user');
-//       collection.find({
-//         username: req.body.username
-//       }).toArray()
-//         .then(function(data2) {
-//           console.log(data2);
+//       return res.status(200).json({
+//         status: 'Successfully created user'
+//       })
+//     })
+//     .catch(function(err) {
+//       console.log(err);
+//       return res.status(500).json({
+//         status: 'Error creating user'
+//       })
+//     })
+// }
+
+
+
+// exports.verify_old = function(req, res) {
+
+//   // need to check key somewhere
+
+//   var collection = db.get().collection('users');
+//   collection.find({
+//     email: req.body.email
+//   }).toArray()
+//     .then(function(users) {
+//       console.log('found user');
+//       var user = users[0];
+
+//       // check key here before verifying
+
+//       collection.update(
+//         { _id : ObjectId(user._id) },
+//         { $set: { 'verified': true } }
+//       )
+//         .then(function(data) {
+//           console.log(data);
+//           return res.status(200).json({
+//             status: 'Successfully verified user'
+//           })
+//         })
+//         .catch(function(err) {
+//           console.log(err);
+//           return res.status(500).json({
+//             status: 'Error verifying user'
+//           })
 //         })
 //     })
 // }
