@@ -10,7 +10,7 @@
         <input type="text" id="msg_input" class="form-control" ng-model="msg_input"/>
       </div>
       <div class="form-group">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" ng-show="can_edit_conv()">Submit</button>
       </div>
     </form>
   </div>
@@ -21,6 +21,30 @@
       <p ng-if="$even">you: {{msg}}</p>
       <p ng-if="$odd">doctor: {{msg}}</p>
     </div>
+  </div>
+  <br/>
+
+  <div class="container" ng-show="reveal_list_conv_history()">
+    <h2><u>Conversation history</u></h2>
+    <div ng-repeat="conv in list_conv_history">
+      <p><b>ID</b>: {{conv._id}} | <b>Start Date</b>: {{conv.start_date}}</p>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" ng-click="list_conv()">List Conversations</button>
+  <br/>
+  <br/>
+  <br/>
+
+  <div class="form-container">
+    <form class="form" ng-submit="get_conv()">
+      <div class="form-group">
+        <label for="get_conv_id">Find Conversation by ID</label>
+        <input type="text" id="get_conv_id" class="form-control" ng-model="get_conv_id"/>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
   </div>
 
 </div>

@@ -63,7 +63,8 @@ exports.submit_name = function(req, res) {
 }
 
 exports.send_text = function(req, res) {
-  output = generate_nonsense(req.body.human);
+  var input = req.body.human;
+  var output = generate_nonsense(input);
   var collection = db.get().collection('conversations');
   if (req.session.conv) {
     collection.findOne({
@@ -71,12 +72,14 @@ exports.send_text = function(req, res) {
     })
       .then(function(conv) {
         var msg_history = conv.msg_history;
+        msg_history.push(input);
         msg_history.push(output);
         collection.update(
           { _id: ObjectId(req.session.conv) },
           { $set: { 'msg_history' : msg_history} }
         )
           .then(function(data) {
+            req.session.display_conv = req.session.conv;
             return res.status(200).json({
               status: 'Updated conversation',
               eliza: output
@@ -99,15 +102,16 @@ exports.send_text = function(req, res) {
       })
   } else {
     var msg_history = [];
+    msg_history.push(input);
     msg_history.push(output);
     collection.insert({
       msg_history: msg_history,
       user: req.session.user,
-      can_continue: true,
-      date: req.body.date
+      start_date: req.body.date
     })
       .then(function(data) {
         req.session.conv = data.ops[0]._id;
+        req.session.display_conv = req.session.conv;
         return res.status(200).json({
           status: 'Started a new conversation',
           eliza: output
@@ -210,14 +214,19 @@ exports.verify = function(req, res) {
 exports.list_conv = function(req, res) {
   var collection = db.get().collection('conversations');
   collection.find({
-    username: req.body.username
+    user: req.session.user
   }).toArray()
     .then(function(convs) {
-      console.log('found convos');
-      console.log(convs);
-      return res.status(200).json({
-        status: 'Found conversations'
-      })
+      if (convs) {
+        return res.status(200).json({
+          status: 'Found conversations',
+          data: convs
+        })
+      } else {
+        return res.status(200).json({
+          status: 'No conversations under user'
+        })
+      }
     })
     .catch(function(err) {
       console.log(err);
@@ -229,15 +238,26 @@ exports.list_conv = function(req, res) {
 
 exports.get_conv = function(req, res) {
   var collection = db.get().collection('conversations');
-  collection.find({
-    _id: req.body.conv_id
-  }).toArray()
+  collection.findOne({
+    $and: [{ _id: ObjectId(req.body.conv_id) }, { user: req.session.user }]
+  })
     .then(function(conv) {
-      console.log('found convo by id');
-      console.log(conv);
-      return res.status(200).json({
-        status: 'Found conversation by id'
-      })
+      if (conv) {
+        var can_continue = false;
+        if (conv._id == req.session.conv) {
+          can_continue = true;
+        }
+        req.session.display_conv = conv._id;
+        return res.status(200).json({
+          status: 'Found conversation by id',
+          can_continue: can_continue,
+          msg_history: conv.msg_history
+        })
+      } else {
+        return res.status(200).json({
+          status: 'No conversation found from ID'
+        })
+      }
     })
     .catch(function(err) {
       console.log(err);
@@ -245,6 +265,21 @@ exports.get_conv = function(req, res) {
         status: 'Error querying for conversation by id'
       })
     })
+}
+
+exports.get_current_conv = function(req, res) {
+  // console.log(req.session.display_conv);
+  if (req.session.display_conv) {
+    return res.status(200).json({
+      status: 'Successfully retrieved current conversation',
+      current_conv_id: req.session.display_conv
+    })
+  } else {
+    return res.status(200).json({
+      status: 'No current conversation',
+      current_conv_id: ""
+    })
+  }
 }
 
 exports.login = function(req, res) {
@@ -299,20 +334,6 @@ exports.auth = function(req, res) {
 
 exports.logout = function(req, res) {
   if (req.session.user) {
-    if (req.session.conv) {
-      var collection = db.get().collection('conversations');
-      collection.update(
-        { _id: ObjectId(req.session.conv) },
-        { $set: { 'can_continue' : false} }
-      )
-        .then(function(data) {
-          // console.log(data);
-          console.log('Closed conversation');
-        })
-        .catch(function(err) {
-          console.log(err);
-        })
-    }
     req.session.destroy();
     return res.status(200).json({
       status: 'Successfully logged out'

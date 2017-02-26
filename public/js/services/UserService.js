@@ -57,6 +57,39 @@ angular.module('UserServ', []).factory('UserService', ['$q', '$timeout', '$http'
 
     get_user : function() {
       return user;
+    },
+
+    list_conv : function() {
+      return $http.get('/listconv')
+        .then(function(data) {
+          // console.log(data);
+          return data;
+        })
+        .catch(function(err) {
+          console.log(err);
+        })
+    },
+
+    get_conv : function(obj) {
+      return $http.post('/getconv', obj)
+        .then(function(data) {
+          // console.log(data);
+          return data;
+        })
+        .catch(function(err) {
+          console.log(err);
+        })
+    },
+
+    get_current_conv : function() {
+      return $http.get('/get_current_conv')
+        .then(function(data) {
+          // console.log(data);
+          return data;
+        })
+        .catch(function(err) {
+          console.log(err);
+        })
     }
     
   }
