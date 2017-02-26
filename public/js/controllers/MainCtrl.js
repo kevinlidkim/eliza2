@@ -12,6 +12,12 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainServ
   $scope.verify_input = "";
   $scope.verify_email_input = "";
 
+  // var inner_call = function() {
+  //   console.log("CALL THIS ON PAGE LOAD");
+  // }
+
+  // inner_call();
+
   $scope.submit_name = function() {
     if ($scope.name_input != "") {
       var obj = {

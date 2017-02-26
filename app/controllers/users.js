@@ -202,60 +202,6 @@ exports.get_conv = function(req, res) {
     })
 }
 
-
-// exports.add_user_old = function(req, res) {
-
-//   var collection = db.get().collection('users');
-//   collection.insert({
-//     username: req.body.username,
-//     password: req.body.password,
-//     email: req.body.email,
-//     verified: false
-//   })
-//     .then(function(data) {
-//       return res.status(200).json({
-//         status: 'Successfully created user'
-//       })
-//     })
-//     .catch(function(err) {
-//       console.log(err);
-//       return res.status(500).json({
-//         status: 'Error creating user'
-//       })
-//     })
-// }
-
-
-
-// exports.verify_old = function(req, res) {
-
-//   // need to check key somewhere
-
-//   var collection = db.get().collection('users');
-//   collection.find({
-//     email: req.body.email
-//   }).toArray()
-//     .then(function(users) {
-//       console.log('found user');
-//       var user = users[0];
-
-//       // check key here before verifying
-
-//       collection.update(
-//         { _id : ObjectId(user._id) },
-//         { $set: { 'verified': true } }
-//       )
-//         .then(function(data) {
-//           console.log(data);
-//           return res.status(200).json({
-//             status: 'Successfully verified user'
-//           })
-//         })
-//         .catch(function(err) {
-//           console.log(err);
-//           return res.status(500).json({
-//             status: 'Error verifying user'
-//           })
-//         })
-//     })
-// }
+exports.login = function(req, res) {
+  req.session.userId = "kev";
+}

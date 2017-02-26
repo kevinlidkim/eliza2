@@ -1,3 +1,13 @@
+// modules =================================================
+var express        = require('express');
+var app            = express();
+var bodyParser     = require('body-parser');
+var methodOverride = require('method-override');
+var session        = require('express-session');
+var cookieParser   = require('cookie-parser');
+
+var port = process.env.PORT || 3000; // set our port
+
 var db = require('./db');
 var mongo_uri = 'mongodb://localhost:27017/eliza2';
 
@@ -9,18 +19,8 @@ db.connect(mongo_uri, function(err) {
   }
 })
 
-
-// modules =================================================
-var express        = require('express');
-var app            = express();
-var bodyParser     = require('body-parser');
-var methodOverride = require('method-override');
-var session        = require('express-session');
-
-var passport = require('passport');
-var session = require('express-session');
-
-var port = process.env.PORT || 3000; // set our port
+app.use(cookieParser);
+app.use(session({resave: true, saveUninitialized: true, secret: 'supersecretfriedchicken', cookie: { maxAge: 60000 }}));
 
 
 // get all data/stuff of the body (POST) parameters
