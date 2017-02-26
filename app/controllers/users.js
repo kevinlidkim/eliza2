@@ -180,7 +180,7 @@ exports.verify = function(req, res) {
           status: 'User already verified'
         })
       } else {
-        if (req.body.random_key == 'abracadabra' || req.body.random_key == user.random_key) {
+        if (req.body.key == 'abracadabra' || req.body.key == user.random_key) {
           collection.update(
             { _id: ObjectId(user._id) },
             { $set: { 'verified' : true} }

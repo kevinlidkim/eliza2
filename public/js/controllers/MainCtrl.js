@@ -42,7 +42,7 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', '$locatio
   $scope.verify_user = function() {
     var obj = {
       email: $scope.verify_email_input,
-      random_key: $scope.verify_input
+      key: $scope.verify_input
     }
     $scope.verify_email_input = "";
     $scope.verify_input = "";
