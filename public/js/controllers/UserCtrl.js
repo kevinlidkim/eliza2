@@ -16,7 +16,8 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
   $scope.send_text = function() {
     if ($scope.msg_input != "") {
       var obj = {
-        human: $scope.msg_input
+        human: $scope.msg_input,
+        date: $scope.date
       }
       $scope.msg_history.push($scope.msg_input);
       MainService.send_text(obj)

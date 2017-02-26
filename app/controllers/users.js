@@ -103,7 +103,8 @@ exports.send_text = function(req, res) {
     collection.insert({
       msg_history: msg_history,
       user: req.session.user,
-      can_continue: true
+      can_continue: true,
+      date: req.body.date
     })
       .then(function(data) {
         req.session.conv = data.ops[0]._id;
@@ -120,12 +121,6 @@ exports.send_text = function(req, res) {
         })
       })
   }
-}
-
-exports.create = function(req, res) {
-  return res.status(200).json({
-    status: 'Registration successful'
-  })
 }
 
 exports.add_user = function(req, res) {
@@ -304,6 +299,20 @@ exports.auth = function(req, res) {
 
 exports.logout = function(req, res) {
   if (req.session.user) {
+    if (req.session.conv) {
+      var collection = db.get().collection('conversations');
+      collection.update(
+        { _id: ObjectId(req.session.conv) },
+        { $set: { 'can_continue' : false} }
+      )
+        .then(function(data) {
+          // console.log(data);
+          console.log('Closed conversation');
+        })
+        .catch(function(err) {
+          console.log(err);
+        })
+    }
     req.session.destroy();
     return res.status(200).json({
       status: 'Successfully logged out'
