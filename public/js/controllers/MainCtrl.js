@@ -131,6 +131,10 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', '$locatio
         $location.path('/login');
       })
   }
+
+  $scope.isLoggedIn = function() {
+    return UserService.isAuth();
+  }
   
 }]);
 

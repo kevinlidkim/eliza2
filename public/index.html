@@ -35,9 +35,9 @@
 			<a class="navbar-brand navbrand_custom" href="/">Eliza</a>
 		</div>
 		<ul class="nav navbar-nav">
-			<li><a href="/login">Login</a></li>
-			<li><a ng-href="/signup">Sign Up</a></li>
-			<li><a ng-click="logout()" href="">Logout</a></li>
+			<li ng-show="isLoggedIn()"><a href="/login">Login</a></li>
+			<li ng-show="isLoggedIn()"><a ng-href="/signup">Sign Up</a></li>
+			<li ng-show="isLoggedIn()"><a ng-click="logout()" href="">Logout</a></li>
     </ul>
 	</nav>
 
