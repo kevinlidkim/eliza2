@@ -19,14 +19,12 @@ db.connect(mongo_uri, function(err) {
   }
 })
 
-app.use(cookieParser);
-app.use(session({resave: true, saveUninitialized: true, secret: 'supersecretfriedchicken', cookie: { maxAge: 60000 }}));
-
-
 // get all data/stuff of the body (POST) parameters
 app.use(bodyParser.json()); // parse application/json 
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 app.use(bodyParser.urlencoded({ extended: true })); // parse application/x-www-form-urlencoded
+app.use(cookieParser());
+app.use(session({resave: true, saveUninitialized: true, secret: 'supersecretfriedchicken', cookie: { maxAge: 60000 }}));
 
 
 
