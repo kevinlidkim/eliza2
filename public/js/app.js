@@ -1,1 +1,1 @@
-angular.module('myApp', ['ngRoute', 'appRoutes', 'MainCtrl', 'MainServ']);
+angular.module('myApp', ['ngRoute', 'appRoutes', 'MainCtrl', 'MainServ', 'UserServ']);

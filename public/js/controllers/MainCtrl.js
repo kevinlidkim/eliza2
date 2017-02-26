@@ -1,4 +1,4 @@
-angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainService', function($scope, MainService) {
+angular.module('MainCtrl', []).controller('MainController', ['$scope', '$location', 'MainService', 'UserService', function($scope, $location, MainService, UserService) {
 
   $scope.name_input = "";
   $scope.name = "";
@@ -11,6 +11,9 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainServ
   $scope.email_input = "";
   $scope.verify_input = "";
   $scope.verify_email_input = "";
+
+  $scope.login_username = "";
+  $scope.login_password = "";
 
   // var inner_call = function() {
   //   console.log("CALL THIS ON PAGE LOAD");
@@ -96,8 +99,37 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', 'MainServ
       email: $scope.verify_email_input,
       random_key: $scope.verify_input
     }
-
+    $scope.verify_email_input = "";
+    $scope.verify_input = "";
     MainService.verify_user(obj);
+  }
+
+  $scope.empty_login = function() {
+    if ($scope.login_password != "" && $scope.login_password != "") {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  $scope.login = function() {
+    var obj = {
+      username: $scope.login_username,
+      password: $scope.login_password
+    }
+    $scope.login_username = "";
+    $scope.login_password = "";
+    UserService.login(obj)
+      .then(function(data) {
+        $location.path('/');
+      })
+  }
+
+  $scope.logout = function() {
+    UserService.logout()
+      .then(function() {
+        $location.path('/login');
+      })
   }
   
 }]);

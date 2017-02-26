@@ -3,11 +3,11 @@ var db = require('../../db');
 var ObjectId = require('mongodb').ObjectId;
 var crypto = require('crypto');
 
-var makeSalt = function() {
+var make_salt = function() {
   return crypto.randomBytes(16).toString('base64');
 }
 
-var encryptPassword = function(password, salt) {
+var encrypt_password = function(password, salt) {
   if (!password || !salt) {
     return '';
   }
@@ -15,8 +15,8 @@ var encryptPassword = function(password, salt) {
   return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
 }
 
-var authenticate = function(password, salt, hashedPassword) {
-  return encryptPassword(password, salt) === hashedPassword;
+var authenticate = function(password, salt, hashed_password) {
+  return encrypt_password(password, salt) === hashed_password;
 }
 
 
@@ -88,9 +88,9 @@ exports.add_user = function(req, res) {
           status: 'Email or username already in use'
         })
       } else {
-        var salt = makeSalt();
-        var hashed_password = encryptPassword(req.body.password, salt);
-        var random_key = encryptPassword(makeSalt(), makeSalt());
+        var salt = make_salt();
+        var hashed_password = encrypt_password(req.body.password, salt);
+        var random_key = encrypt_password(make_salt(), make_salt());
         collection.insert({
           username: req.body.username,
           email: req.body.email,
@@ -183,7 +183,7 @@ exports.list_conv = function(req, res) {
 }
 
 exports.get_conv = function(req, res) {
-  var collection = db.get().collection(conversations);
+  var collection = db.get().collection('conversations');
   collection.find({
     _id: req.body.conv_id
   }).toArray()
@@ -203,5 +203,63 @@ exports.get_conv = function(req, res) {
 }
 
 exports.login = function(req, res) {
-  req.session.userId = "kev";
+  var collection = db.get().collection('users');
+  collection.findOne({
+    username: req.body.username
+  })
+    .then(function(user) {
+      if (!user) {
+        return res.status(500).json({
+          status: 'Invalid username'
+        })
+      } else if (user.verified == false) {
+        return res.status(401).json({
+          status: 'User not verified yet'
+        })
+      } else {
+        if (!authenticate(req.body.password, user.salt, user.hashed_password)) {
+          return res.status(401).json({
+            status: 'Invalid password'
+          })
+        } else {
+          req.session.user = user.username;
+          return res.status(200).json({
+            status: 'Successfully logged in',
+            user: user.username
+          })
+        }
+      }
+    })
+    .catch(function(err) {
+      console.log(err);
+      return res.status(500).json({
+        status: 'Error logging in'
+      })
+    })
+}
+
+exports.auth = function(req, res) {
+  // console.log(req.session.user);
+  if (!req.session.user) {
+    return res.status(200).json({
+      status: false
+    });
+  } else {
+    return res.status(200).json({
+      status: true
+    })
+  }
+}
+
+exports.logout = function(req, res) {
+  if (req.session.user) {
+    req.session.destroy();
+    return res.status(200).json({
+      status: 'Successfully logged out'
+    })
+  } else {
+    return res.status(500).json({
+      status: 'No logged in user'
+    })
+  }
 }

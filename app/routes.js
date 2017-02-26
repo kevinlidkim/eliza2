@@ -7,8 +7,9 @@ module.exports = function(app) {
 
   app.post('/adduser', users.add_user);
   app.post('/verify', users.verify);
-  // app.post('/login', users.login);
-  // app.post('/logout', users.logout);
+  app.post('/login', users.login);
+  app.get('/logout', users.logout);
+  app.get('/status', users.auth);
 
   // app.post('/listconv', users.list_conv);
   // app.post('/getconv', users.get_conv);

@@ -1,0 +1,59 @@
+angular.module('UserServ', []).factory('UserService', ['$q', '$timeout', '$http', function($q, $timeout, $http) {
+
+  var user = null;
+  var loggedIn = false;
+
+  return {
+
+    login : function(obj) {
+      return $http.post('/login', obj)
+        .then(function(data) {
+          user = data.data.user;
+          loggedIn = true;
+          // console.log(data);
+        })
+        .catch(function(err) {
+          console.log(err);
+        })
+    },
+
+    logout : function() {
+      return $http.get('/logout')
+        .then(function(data) {
+          user = null
+          loggedIn = false;
+          // console.log(data);
+        })
+        .catch(function(err) {
+          console.log(err);
+        })
+    },
+
+    isAuth : function() {
+      if (loggedIn) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    getUserStatus : function() {
+      return $http.get('/status')
+        .then(function(data) {
+          // console.log(data);
+          if (data.data.status) {
+            loggedIn = true;
+          } else {
+            loggedIn = false;
+          }
+          // console.log(loggedIn);
+        })
+        .catch(function(data) {
+          loggedIn = false;
+        });
+    }
+    
+  }
+
+}]);
+
