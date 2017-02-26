@@ -3,6 +3,10 @@ var db = require('../../db');
 var ObjectId = require('mongodb').ObjectId;
 var crypto = require('crypto');
 
+var request = require('request');
+
+var secret = '6Ldt6RYUAAAAANiL2zRKPFNy3MibrLcziAPvmc6q';
+
 var make_salt = function() {
   return crypto.randomBytes(16).toString('base64');
 }
@@ -47,6 +51,17 @@ var generate_nonsense = function(input_case) {
     return 'You\'re crazy and I can\'t save you';
   }
 }
+
+// function validate_recaptcha(captcha) {
+
+//   var verification_url = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + captcha;
+//   request(verification_url, function(error, response, body) {
+//     body = JSON.parse(body);
+//     console.log(body);
+//     return body;
+//   })
+
+// }
 
 exports.submit_name = function(req, res) {
   date = moment().format("MMMM Do YYYY")
@@ -127,42 +142,70 @@ exports.send_text = function(req, res) {
   }
 }
 
-exports.add_user = function(req, res) {
-  // console.log(req.body);
-  var collection = db.get().collection('users');
-  collection.findOne({
-    $or: [{ email: req.body.email }, { username: req.body.username }]
+function validate_recaptcha(captcha) {
+
+  var verification_url = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + captcha;
+  request(verification_url, function(error, response, body) {
+    body = JSON.parse(body);
+    console.log(body);
+    return body;
   })
-    .then(function(user) {
-      if (user) {
-        return res.status(500).json({
-          status: 'Email or username already in use'
-        })
-      } else {
-        var salt = make_salt();
-        var hashed_password = encrypt_password(req.body.password, salt);
-        var random_key = encrypt_password(make_salt(), make_salt());
-        collection.insert({
-          username: req.body.username,
-          email: req.body.email,
-          salt: salt,
-          hashed_password: hashed_password,
-          verified: false,
-          random_key: random_key
-        })
-          .then(function(data) {
-            return res.status(200).json({
-              status: 'Successfully created user'
-            })
-          })
-          .catch(function(err) {
-            console.log(err);
+
+}
+
+exports.add_user = function(req, res) {
+
+  var captcha = req.body['g-recaptcha-response'];
+  var verification_url = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + captcha;
+
+  request(verification_url, function(error, response, body) {
+    body = JSON.parse(body);
+    if (body.success) {
+
+      var collection = db.get().collection('users');
+      collection.findOne({
+        $or: [{ email: req.body.email }, { username: req.body.username }]
+      })
+        .then(function(user) {
+          if (user) {
             return res.status(500).json({
-              status: 'Error creating user'
+              status: 'Email or username already in use'
             })
-          })
-      }
-    })
+          } else {
+            var salt = make_salt();
+            var hashed_password = encrypt_password(req.body.password, salt);
+            var random_key = encrypt_password(make_salt(), make_salt());
+            collection.insert({
+              username: req.body.username,
+              email: req.body.email,
+              salt: salt,
+              hashed_password: hashed_password,
+              verified: false,
+              random_key: random_key
+            })
+              .then(function(data) {
+                return res.status(200).json({
+                  status: 'Successfully created user'
+                })
+              })
+              .catch(function(err) {
+                console.log(err);
+                return res.status(500).json({
+                  status: 'Error creating user'
+                })
+              })
+          }
+        })
+
+
+
+    } else {
+      return res.status(500).json({
+        status: 'Failed to verify captcha'
+      })
+    }
+  })
+
 }
 
 exports.verify = function(req, res) {

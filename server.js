@@ -5,6 +5,7 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 var session        = require('express-session');
 var cookieParser   = require('cookie-parser');
+var request = require('request');
 
 var port = process.env.PORT || 80; // set our port
 

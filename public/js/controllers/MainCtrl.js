@@ -24,7 +24,7 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', '$locatio
         username: $scope.username_input,
         password: $scope.password_input,
         email: $scope.email_input,
-        g-recaptcha-response: captcha_response
+        'g-recaptcha-response': captcha_response
       }
       $scope.verify_email_input = $scope.email_input;
       $scope.username_input = "";
