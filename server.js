@@ -6,7 +6,7 @@ var methodOverride = require('method-override');
 var session        = require('express-session');
 var cookieParser   = require('cookie-parser');
 
-var port = process.env.PORT || 3000; // set our port
+var port = process.env.PORT || 80; // set our port
 
 var db = require('./db');
 var mongo_uri = 'mongodb://localhost:27017/eliza2';
