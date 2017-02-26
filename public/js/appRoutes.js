@@ -3,20 +3,19 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
 	$routeProvider
 
 		.when('/', {
-			templateUrl: 'views/home.html',
-			controller: 'MainController',
-			access: {restricted: true}
+			redirectTo: '/eliza',
+      access: {restricted: true}
 		})
 
 		.when('/eliza', {
 			templateUrl: 'views/home.html',
-			controller: 'MainController',
+			controller: 'UserController',
 			access: {restricted: true}
 		})
 
 		.when('/eliza/DOCTOR', {
 			templateUrl: 'views/doctor.html',
-			controller: 'MainController',
+			controller: 'UserController',
 			access: {restricted: true}
 		})
 
@@ -43,7 +42,7 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
 		})
 
 		.otherwise({
-      redirectTo: '/'
+      redirectTo: '/eliza'
     });
 
 	$locationProvider.html5Mode(true);
@@ -55,9 +54,9 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
 .run(function ($rootScope, $location, $route, UserService) {
   $rootScope.$on('$routeChangeStart',
     function (event, next, current) {
-      UserService.getUserStatus()
+      UserService.get_user_status()
         .then(function() {
-          if (next.access.restricted && UserService.isAuth() === false) {
+          if (next.access.restricted && UserService.is_auth() === false) {
             $location.path('/login');
             $route.reload();
           }
