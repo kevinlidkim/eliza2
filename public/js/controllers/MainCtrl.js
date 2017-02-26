@@ -1,4 +1,4 @@
-angular.module('MainCtrl', []).controller('MainController', ['$scope', '$location', 'MainService', 'UserService', function($scope, $location, MainService, UserService) {
+angular.module('MainCtrl', []).controller('MainController', ['$scope', '$location', 'vcRecaptchaService', 'MainService', 'UserService', function($scope, $location, recaptcha, MainService, UserService) {
 
   $scope.username_input = "";
   $scope.password_input = "";
@@ -18,17 +18,21 @@ angular.module('MainCtrl', []).controller('MainController', ['$scope', '$locatio
   }
 
   $scope.register = function() {
-    var obj = {
-      username: $scope.username_input,
-      password: $scope.password_input,
-      email: $scope.email_input
-    }
-    $scope.verify_email_input = $scope.email_input;
-    $scope.username_input = "";
-    $scope.password_input = "";
-    $scope.email_input = "";
+    var captcha_response = recaptcha.getResponse();
+    if (captcha_response != "") {
+      var obj = {
+        username: $scope.username_input,
+        password: $scope.password_input,
+        email: $scope.email_input,
+        g-recaptcha-response: captcha_response
+      }
+      $scope.verify_email_input = $scope.email_input;
+      $scope.username_input = "";
+      $scope.password_input = "";
+      $scope.email_input = "";
 
-    MainService.signup(obj);
+      MainService.signup(obj);
+    }
   }
 
   $scope.empty_verify = function() {

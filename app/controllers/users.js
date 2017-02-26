@@ -128,6 +128,7 @@ exports.send_text = function(req, res) {
 }
 
 exports.add_user = function(req, res) {
+  // console.log(req.body);
   var collection = db.get().collection('users');
   collection.findOne({
     $or: [{ email: req.body.email }, { username: req.body.username }]
