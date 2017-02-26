@@ -251,7 +251,9 @@ exports.get_conv = function(req, res) {
         return res.status(200).json({
           status: 'Found conversation by id',
           can_continue: can_continue,
-          msg_history: conv.msg_history
+          text: conv.msg_history,
+          timestamp: conv.start_date,
+          name: conv.user
         })
       } else {
         return res.status(200).json({

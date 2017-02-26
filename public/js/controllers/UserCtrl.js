@@ -9,6 +9,9 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
   $scope.get_conv_id = "";
 
   $scope.send_text = function() {
+    if (!$scope.can_continue) {
+      return;
+    }
     if ($scope.msg_input != "") {
       var obj = {
         human: $scope.msg_input,
@@ -58,7 +61,7 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
     UserService.get_conv(obj)
       .then(function(data) {
         // console.log(data.data.msg_history);
-        $scope.msg_history = data.data.msg_history;
+        $scope.msg_history = data.data.text;
         $scope.can_continue = data.data.can_continue;
         $scope.get_conv_id = "";
       })
