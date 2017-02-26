@@ -1,57 +1,28 @@
 angular.module('UserCtrl', []).controller('UserController', ['$scope', '$location', 'moment', 'MainService', 'UserService', function($scope, $location, moment, MainService, UserService) {
 
-  $scope.name_input = "";
-  $scope.name = "";
-  $scope.date = "";
-  $scope.input = "";
+  $scope.msg_input = "";
   $scope.msg_history = [];
 
   $scope.user = "";
 
-  // var inner_call = function() {
-  //   console.log("CALL THIS ON PAGE LOAD");
-  // }
-
-  // inner_call();
 
   var load_eliza_data = function() {
     $scope.user = UserService.get_user();
-    $scope.date = moment().format("MMMM Do YYYY");
+    $scope.date = moment().format("MMMM Do YYYY, h:mm:ss a");
   }
 
   load_eliza_data();
 
-  $scope.submit_name = function() {
-    if ($scope.name_input != "") {
-      var obj = {
-        name: $scope.name_input
-      }
-      MainService.submit_name(obj)
-        .then(function(data) {
-          $scope.date = data.date;
-          $scope.name = data.name;
-        })
-    }
-  };
-
-  $scope.reveal_name = function() {
-    if ($scope.name != "") {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   $scope.send_text = function() {
-    if ($scope.input != "") {
+    if ($scope.msg_input != "") {
       var obj = {
-        human: $scope.input
+        human: $scope.msg_input
       }
-      $scope.msg_history.push($scope.input);
+      $scope.msg_history.push($scope.msg_input);
       MainService.send_text(obj)
         .then(function(data) {
           $scope.msg_history.push(data.eliza);
-          $scope.input = "";
+          $scope.msg_input = "";
         })
     }
   }

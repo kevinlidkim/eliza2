@@ -63,12 +63,63 @@ exports.submit_name = function(req, res) {
 }
 
 exports.send_text = function(req, res) {
-  // console.log(req.body);
   output = generate_nonsense(req.body.human);
-  return res.status(200).json({
-    status: 'Received message',
-    eliza: output
-  })
+  var collection = db.get().collection('conversations');
+  if (req.session.conv) {
+    collection.findOne({
+      _id: ObjectId(req.session.conv)
+    })
+      .then(function(conv) {
+        var msg_history = conv.msg_history;
+        msg_history.push(output);
+        collection.update(
+          { _id: ObjectId(req.session.conv) },
+          { $set: { 'msg_history' : msg_history} }
+        )
+          .then(function(data) {
+            return res.status(200).json({
+              status: 'Updated conversation',
+              eliza: output
+            })
+          })
+          .catch(function(err) {
+            console.log(err);
+            return res.status(500).json({
+              status: 'Failed to update conversation',
+              eliza: output
+            })
+          })
+      })
+      .catch(function(error) {
+        console.log(error);
+        return res.status(500).json({
+          status: 'Failed to find conversation',
+          eliza: output
+        })
+      })
+  } else {
+    var msg_history = [];
+    msg_history.push(output);
+    collection.insert({
+      msg_history: msg_history,
+      user: req.session.user,
+      can_continue: true
+    })
+      .then(function(data) {
+        req.session.conv = data.ops[0]._id;
+        return res.status(200).json({
+          status: 'Started a new conversation',
+          eliza: output
+        })
+      })
+      .catch(function(err) {
+        console.log(err);
+        return res.status(500).json({
+          status: 'Error starting new conversation',
+          eliza: output
+        })
+      })
+  }
 }
 
 exports.create = function(req, res) {
@@ -101,8 +152,7 @@ exports.add_user = function(req, res) {
         })
           .then(function(data) {
             return res.status(200).json({
-              status: 'Successfully created user',
-              data: data
+              status: 'Successfully created user'
             })
           })
           .catch(function(err) {
@@ -133,7 +183,7 @@ exports.verify = function(req, res) {
       } else {
         if (req.body.random_key == 'abracadabra' || req.body.random_key == user.random_key) {
           collection.update(
-            { _id : ObjectId(user._id) },
+            { _id: ObjectId(user._id) },
             { $set: { 'verified' : true} }
           )
             .then(function(data) {
