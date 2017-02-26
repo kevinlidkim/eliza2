@@ -1,4 +1,4 @@
-angular.module('UserCtrl', []).controller('UserController', ['$scope', '$location', 'MainService', 'UserService', function($scope, $location, MainService, UserService) {
+angular.module('UserCtrl', []).controller('UserController', ['$scope', '$location', 'moment', 'MainService', 'UserService', function($scope, $location, moment, MainService, UserService) {
 
   $scope.name_input = "";
   $scope.name = "";
@@ -16,7 +16,7 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
 
   var load_eliza_data = function() {
     $scope.user = UserService.get_user();
-    $scope.date = new Date();
+    $scope.date = moment().format("MMMM Do YYYY");
   }
 
   load_eliza_data();

@@ -246,7 +246,8 @@ exports.auth = function(req, res) {
     });
   } else {
     return res.status(200).json({
-      status: true
+      status: true,
+      user: req.session.user
     })
   }
 }
