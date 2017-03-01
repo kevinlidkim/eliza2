@@ -8,7 +8,7 @@ module.exports = function(app) {
   app.post('/DOCTOR', users.send_text);
 
   app.post('/adduser', users.add_user);
-  app.post('/listall', users.list_all)
+  // app.get('/listall', users.list_all);
 
   app.post('/addusercaptcha', users.add_user_captcha);
   app.post('/verify', users.verify);
