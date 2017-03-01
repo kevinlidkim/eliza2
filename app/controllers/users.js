@@ -307,7 +307,7 @@ exports.list_conv = function(req, res) {
 exports.get_conv = function(req, res) {
   var collection = db.get().collection('conversations');
   collection.findOne({
-    $and: [{ _id: ObjectId(req.body.conv_id) }, { user: req.session.user }]
+    $and: [{ _id: ObjectId(req.body.id) }, { user: req.session.user }]
   })
     .then(function(conv) {
       if (conv) {

@@ -57,7 +57,7 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
 
   $scope.get_conv = function() {
     var obj = {
-      conv_id: $scope.get_conv_id
+      id: $scope.get_conv_id
     };
     UserService.get_conv(obj)
       .then(function(data) {
