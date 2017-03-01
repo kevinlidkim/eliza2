@@ -69,6 +69,12 @@ exports.submit_name = function(req, res) {
 }
 
 exports.send_text = function(req, res) {
+
+  if (!req.session.user) {
+    return res.status(500).json({
+      status: 'No logged in user'
+    })
+  }
   var input = req.body.human;
   var output = generate_nonsense(input);
   var collection = db.get().collection('conversations');
