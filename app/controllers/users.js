@@ -345,7 +345,7 @@ exports.list_all = function(req, res) {
         })
         return res.status(200).json({
           status: 'Found conversations',
-          conversations: conversations
+          conversation: conversations
         })
       } else {
         return res.status(200).json({
