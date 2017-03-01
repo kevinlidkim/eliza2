@@ -27,7 +27,7 @@
   <div class="container" ng-show="reveal_list_conv_history()">
     <h2><u>Conversation history</u></h2>
     <div ng-repeat="conv in list_conv_history">
-      <p><b>ID</b>: {{conv._id}} | <b>Start Date</b>: {{conv.start_date}}</p>
+      <p><b>ID</b>: {{conv.id}} | <b>Start Date</b>: {{conv.start_date}}</p>
     </div>
   </div>
   <button type="submit" class="btn btn-primary" ng-click="list_conv()">List Conversations</button>
