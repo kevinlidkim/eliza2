@@ -385,7 +385,7 @@ exports.list_conv = function(req, res) {
         })
         return res.status(200).json({
           status: 'Found conversations',
-          conversation: conversations
+          conversations: conversations
         })
       } else {
         return res.status(200).json({
