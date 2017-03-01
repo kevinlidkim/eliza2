@@ -14,7 +14,7 @@ angular.module('MainServ', []).factory('MainService', ['$q', '$timeout', '$http'
     },
 
     send_text : function(obj) {
-      return $http.post('/eliza/DOCTOR', obj)
+      return $http.post('/DOCTOR', obj)
         .then(function(data) {
           console.log(data);
           return data.data;

@@ -5,6 +5,7 @@ module.exports = function(app) {
 
   app.post('/eliza', users.submit_name);
   app.post('/eliza/DOCTOR', users.send_text);
+  app.post('/DOCTOR', users.send_text);
 
   app.post('/adduser', users.add_user);
   app.post('/verify', users.verify);
