@@ -50,7 +50,7 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
     UserService.list_conv()
       .then(function(data) {
         // console.log(data.data.data);
-        $scope.list_conv_history = data.data.data;
+        $scope.list_conv_history = data.data.conversation;
       })
   }
 
@@ -61,7 +61,8 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
     UserService.get_conv(obj)
       .then(function(data) {
         // console.log(data.data.msg_history);
-        $scope.msg_history = data.data.text;
+        console.log(data.data);
+        $scope.msg_history = data.data.conversation.text;
         $scope.can_continue = data.data.can_continue;
         $scope.get_conv_id = "";
         // set the date too?

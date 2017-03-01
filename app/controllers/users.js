@@ -132,16 +132,16 @@ exports.send_text = function(req, res) {
   }
 }
 
-function validate_recaptcha(captcha) {
+// function validate_recaptcha(captcha) {
 
-  var verification_url = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + captcha;
-  request(verification_url, function(error, response, body) {
-    body = JSON.parse(body);
-    console.log(body);
-    return body;
-  })
+//   var verification_url = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + captcha;
+//   request(verification_url, function(error, response, body) {
+//     body = JSON.parse(body);
+//     console.log(body);
+//     return body;
+//   })
 
-}
+// }
 
 exports.add_user = function(req, res) {
 
@@ -277,7 +277,7 @@ exports.list_conv = function(req, res) {
       if (convs) {
         return res.status(200).json({
           status: 'Found conversations',
-          data: convs
+          conversation: convs
         })
       } else {
         return res.status(200).json({
@@ -308,6 +308,11 @@ exports.get_conv = function(req, res) {
         return res.status(200).json({
           status: 'Found conversation by id',
           can_continue: can_continue,
+          conversation: {
+            text: conv.msg_history,
+            timestamp: conv.start_date,
+            name: conv.user
+          },
           text: conv.msg_history,
           timestamp: conv.start_date,
           name: conv.user
