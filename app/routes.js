@@ -12,7 +12,7 @@ module.exports = function(app) {
   app.get('/logout', users.logout);
   app.get('/status', users.auth);
 
-  app.get('/listconv', users.list_conv);
+  app.get('/listconv', users.list_all);
   app.post('/getconv', users.get_conv);
   app.get('/get_current_conv', users.get_current_conv);
 

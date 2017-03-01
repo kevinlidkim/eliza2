@@ -277,7 +277,7 @@ exports.list_conv = function(req, res) {
       if (convs) {
         return res.status(200).json({
           status: 'Found conversations',
-          conversation: convs
+          conversations: convs
         })
       } else {
         return res.status(200).json({
@@ -312,10 +312,7 @@ exports.get_conv = function(req, res) {
             text: conv.msg_history,
             timestamp: conv.start_date,
             name: conv.user
-          },
-          text: conv.msg_history,
-          timestamp: conv.start_date,
-          name: conv.user
+          }
         })
       } else {
         return res.status(200).json({
