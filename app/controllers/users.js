@@ -69,7 +69,6 @@ exports.submit_name = function(req, res) {
 }
 
 exports.send_text = function(req, res) {
-
   if (!req.session.user) {
     return res.status(500).json({
       status: 'No logged in user'
@@ -275,41 +274,46 @@ exports.verify = function(req, res) {
     })
 }
 
-exports.list_all = function(req, res) {
-  var collection = db.get().collection('conversations');
-  collection.find({
-  }).toArray()
-    .then(function(convs) {
-      // console.log(convs);
-      if (convs) {
-        var conversations = [];
-        _.forEach(convs, function(conv) {
-          var result = {
-            id: conv._id,
-            msg_history: conv.msg_history,
-            start_date: conv.start_date
-          }
-          conversations.push(result);
-        })
-        return res.status(200).json({
-          status: 'Found conversations',
-          conversations: conversations
-        })
-      } else {
-        return res.status(200).json({
-          status: 'No conversations under user'
-        })
-      }
-    })
-    .catch(function(err) {
-      console.log(err);
-      return res.status(500).json({
-        status: 'Error querying for conversations'
-      })
-    })
-}
+// exports.list_all = function(req, res) {
+//   var collection = db.get().collection('conversations');
+//   collection.find({
+//   }).toArray()
+//     .then(function(convs) {
+//       // console.log(convs);
+//       if (convs) {
+//         var conversations = [];
+//         _.forEach(convs, function(conv) {
+//           var result = {
+//             id: conv._id,
+//             msg_history: conv.msg_history,
+//             start_date: conv.start_date
+//           }
+//           conversations.push(result);
+//         })
+//         return res.status(200).json({
+//           status: 'Found conversations',
+//           conversations: conversations
+//         })
+//       } else {
+//         return res.status(200).json({
+//           status: 'No conversations under user'
+//         })
+//       }
+//     })
+//     .catch(function(err) {
+//       console.log(err);
+//       return res.status(500).json({
+//         status: 'Error querying for conversations'
+//       })
+//     })
+// }
 
 exports.list_conv = function(req, res) {
+  if (!req.session.user) {
+    return res.status(500).json({
+      status: 'No logged in user'
+    })
+  }
   var collection = db.get().collection('conversations');
   collection.find({
     user: req.session.user
@@ -345,6 +349,11 @@ exports.list_conv = function(req, res) {
 }
 
 exports.get_conv = function(req, res) {
+  if (!req.session.user) {
+    return res.status(500).json({
+      status: 'No logged in user'
+    })
+  }
   var collection = db.get().collection('conversations');
   collection.findOne({
     $and: [{ _id: ObjectId(req.body.id) }, { user: req.session.user }]
