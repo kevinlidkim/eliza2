@@ -113,7 +113,7 @@ exports.send_text = function(req, res) {
     collection.insert({
       msg_history: msg_history,
       user: req.session.user,
-      start_date: req.body.date
+      start_date: moment().format("MMMM Do YYYY, h:mm:ss a")
     })
       .then(function(data) {
         req.session.conv = data.ops[0]._id;
