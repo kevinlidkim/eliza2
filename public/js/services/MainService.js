@@ -25,7 +25,7 @@ angular.module('MainServ', []).factory('MainService', ['$q', '$timeout', '$http'
     },
 
     signup : function(obj) {
-      return $http.post('/adduser', obj)
+      return $http.post('/addusercaptcha', obj)
         .then(function(data) {
           console.log(data);
         })

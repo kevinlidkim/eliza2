@@ -138,18 +138,71 @@ exports.send_text = function(req, res) {
   }
 }
 
-// function validate_recaptcha(captcha) {
-
-//   var verification_url = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + captcha;
-//   request(verification_url, function(error, response, body) {
-//     body = JSON.parse(body);
-//     console.log(body);
-//     return body;
-//   })
-
-// }
-
 exports.add_user = function(req, res) {
+
+  var collection = db.get().collection('users');
+  collection.findOne({
+    $or: [{ email: req.body.email }, { username: req.body.username }]
+  })
+    .then(function(user) {
+      if (user) {
+        return res.status(500).json({
+          status: 'Email or username already in use'
+        })
+      } else {
+        var salt = make_salt();
+        var hashed_password = encrypt_password(req.body.password, salt);
+        var random_key = encrypt_password(make_salt(), make_salt());
+        collection.insert({
+          username: req.body.username,
+          email: req.body.email,
+          salt: salt,
+          hashed_password: hashed_password,
+          verified: false,
+          random_key: random_key
+        })
+          .then(function(data) {
+
+            var transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'noreplyeliza@gmail.com',
+                pass: 'cse356!@'
+              }
+            });
+
+            var mail_options = {
+              from: '"Eliza 👻" <noreplyeliza@gmail.com>', // sender address
+              to: req.body.email, // list of receivers
+              subject: 'Eliza Verification ✔', // Subject line
+              text: random_key, // plain text body
+              html: '<b>' + random_key + '</b>' // html body
+            };
+
+            transporter.sendMail(mail_options, (error, info) => {
+              if (!error) {
+                return res.status(200).json({
+                  status: 'Successfully create user'
+                })
+              } else {
+                return res.status(500).json({
+                  status: 'Unable to send email'
+                })
+              }
+            });
+          })
+          .catch(function(err) {
+            console.log(err);
+            return res.status(500).json({
+              status: 'Error creating user'
+            })
+          })
+      }
+    })
+
+}
+
+exports.add_user_captcha = function(req, res) {
 
   var captcha = req.body['g-recaptcha-response'];
   var verification_url = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + captcha;
