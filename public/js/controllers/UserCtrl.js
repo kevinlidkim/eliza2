@@ -50,7 +50,8 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
     UserService.list_conv()
       .then(function(data) {
         // console.log(data.data.data);
-        $scope.list_conv_history = data.data.conversation;
+        console.log(data);
+        $scope.list_conv_history = data.conversations;
       })
   }
 

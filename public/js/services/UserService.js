@@ -62,8 +62,8 @@ angular.module('UserServ', []).factory('UserService', ['$q', '$timeout', '$http'
     list_conv : function() {
       return $http.get('/listconv')
         .then(function(data) {
-          console.log(data);
-          return data;
+          // console.log(data);
+          return data.data;
         })
         .catch(function(err) {
           console.log(err);

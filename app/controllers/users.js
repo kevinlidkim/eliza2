@@ -4,6 +4,7 @@ var ObjectId = require('mongodb').ObjectId;
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var request = require('request');
+var _ = require('lodash');
 
 var secret = '6Ldt6RYUAAAAANiL2zRKPFNy3MibrLcziAPvmc6q';
 
@@ -274,10 +275,20 @@ exports.list_conv = function(req, res) {
     user: req.session.user
   }).toArray()
     .then(function(convs) {
+      // console.log(convs);
       if (convs) {
+        var conversations = [];
+        _.forEach(convs, function(conv) {
+          var result = {
+            id: conv._id,
+            msg_history: conv.msg_history,
+            start_date: conv.start_date
+          }
+          conversations.push(result);
+        })
         return res.status(200).json({
           status: 'Found conversations',
-          conversations: convs
+          conversations: conversations
         })
       } else {
         return res.status(200).json({
