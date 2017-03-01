@@ -2,7 +2,7 @@ var moment = require('moment');
 var db = require('../../db');
 var ObjectId = require('mongodb').ObjectId;
 var crypto = require('crypto');
-
+var nodemailer = require('nodemailer');
 var request = require('request');
 
 var secret = '6Ldt6RYUAAAAANiL2zRKPFNy3MibrLcziAPvmc6q';
@@ -52,16 +52,6 @@ var generate_nonsense = function(input_case) {
   }
 }
 
-// function validate_recaptcha(captcha) {
-
-//   var verification_url = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + captcha;
-//   request(verification_url, function(error, response, body) {
-//     body = JSON.parse(body);
-//     console.log(body);
-//     return body;
-//   })
-
-// }
 
 exports.submit_name = function(req, res) {
   date = moment().format("MMMM Do YYYY")
@@ -184,9 +174,34 @@ exports.add_user = function(req, res) {
               random_key: random_key
             })
               .then(function(data) {
-                return res.status(200).json({
-                  status: 'Successfully created user'
-                })
+
+                var transporter = nodemailer.createTransport({
+                  service: 'gmail',
+                  auth: {
+                    user: 'noreplyeliza@gmail.com',
+                    pass: 'cse356!@'
+                  }
+                });
+
+                var mail_options = {
+                  from: '"Eliza 👻" <noreplyeliza@gmail.com>', // sender address
+                  to: req.body.email, // list of receivers
+                  subject: 'Eliza Verification ✔', // Subject line
+                  text: random_key, // plain text body
+                  html: '<b>' + random_key + '</b>' // html body
+                };
+
+                transporter.sendMail(mail_options, (error, info) => {
+                  if (!error) {
+                    return res.status(200).json({
+                      status: 'Successfully create user'
+                    })
+                  } else {
+                    return res.status(500).json({
+                      status: 'Unable to send email'
+                    })
+                  }
+                });
               })
               .catch(function(err) {
                 console.log(err);
@@ -196,8 +211,6 @@ exports.add_user = function(req, res) {
               })
           }
         })
-
-
 
     } else {
       return res.status(500).json({

@@ -64,6 +64,7 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
         $scope.msg_history = data.data.text;
         $scope.can_continue = data.data.can_continue;
         $scope.get_conv_id = "";
+        // set the date too?
       })
   }
 
