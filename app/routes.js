@@ -15,6 +15,7 @@ module.exports = function(app) {
   app.post('/verify', users.verify);
   app.post('/login', users.login);
   app.get('/logout', users.logout);
+  app.post('/logout', users.logout);
   app.get('/status', users.auth);
 
   app.post('/listconv', users.list_conv);
