@@ -350,7 +350,7 @@ exports.verify = function(req, res) {
 exports.list_conv = function(req, res) {
   if (!req.session.user) {
     return res.status(500).json({
-      status: 'No logged in user'
+      status: 'ERROR'
     })
   }
   var collection = db.get().collection('conversations');
@@ -390,7 +390,7 @@ exports.list_conv = function(req, res) {
 exports.get_conv = function(req, res) {
   if (!req.session.user) {
     return res.status(500).json({
-      status: 'No logged in user'
+      status: 'ERROR'
     })
   }
   var collection = db.get().collection('conversations');
