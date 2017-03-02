@@ -79,7 +79,7 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
       .then(function(data) {
         if (data.data.current_conv_id != "") {
           $scope.get_conv_id = data.data.current_conv_id;
-          // $scope.get_conv();
+          $scope.get_conv();
         }
       })
     
