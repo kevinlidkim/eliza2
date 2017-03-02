@@ -18,8 +18,7 @@
   <div class="container" ng-show="reveal_msg_history()">
     <h4>Chat history</h4>
     <div ng-repeat="msg in msg_history track by $index">
-      <p ng-if="$even">you: {{msg}}</p>
-      <p ng-if="$odd">doctor: {{msg}}</p>
+      <p>{{msg.name}}: {{msg.text}}</p>
     </div>
   </div>
   <br/>

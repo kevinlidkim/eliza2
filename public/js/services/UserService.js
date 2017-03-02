@@ -10,7 +10,7 @@ angular.module('UserServ', []).factory('UserService', ['$q', '$timeout', '$http'
         .then(function(data) {
           user = data.data.user;
           loggedIn = true;
-          console.log(data);
+          // console.log(data);
         })
         .catch(function(err) {
           console.log(err);
@@ -60,7 +60,7 @@ angular.module('UserServ', []).factory('UserService', ['$q', '$timeout', '$http'
     },
 
     list_conv : function() {
-      return $http.get('/listconv')
+      return $http.post('/listconv')
         .then(function(data) {
           // console.log(data);
           return data.data;
@@ -71,7 +71,7 @@ angular.module('UserServ', []).factory('UserService', ['$q', '$timeout', '$http'
     },
 
     get_conv : function(obj) {
-      return $http.post('/getconv2', obj)
+      return $http.post('/getconv', obj)
         .then(function(data) {
           // console.log(data);
           return data;

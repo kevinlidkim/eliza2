@@ -61,12 +61,10 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
     };
     UserService.get_conv(obj)
       .then(function(data) {
-        // console.log(data.data.msg_history);
         console.log(data.data);
-        $scope.msg_history = data.data.conversation.text;
+        $scope.msg_history = data.data.conversation;
         $scope.can_continue = data.data.can_continue;
         $scope.get_conv_id = "";
-        // set the date too?
       })
   }
 
@@ -81,7 +79,7 @@ angular.module('UserCtrl', []).controller('UserController', ['$scope', '$locatio
       .then(function(data) {
         if (data.data.current_conv_id != "") {
           $scope.get_conv_id = data.data.current_conv_id;
-          $scope.get_conv();
+          // $scope.get_conv();
         }
       })
     

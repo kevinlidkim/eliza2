@@ -83,8 +83,18 @@ exports.send_text = function(req, res) {
     })
       .then(function(conv) {
         var msg_history = conv.msg_history;
-        msg_history.push(input);
-        msg_history.push(output);
+        var your_message = {
+          name: req.session.user,
+          text: input,
+          timestamp: moment().format("MMMM Do YYYY, h:mm:ss a")
+        }
+        var eliza_message = {
+          name: 'eliza',
+          text: output,
+          timestamp: moment().format("MMMM Do YYYY, h:mm:ss a")
+        }
+        msg_history.push(your_message);
+        msg_history.push(eliza_message);
         collection.update(
           { _id: ObjectId(req.session.conv) },
           { $set: { 'msg_history' : msg_history} }
@@ -113,8 +123,18 @@ exports.send_text = function(req, res) {
       })
   } else {
     var msg_history = [];
-    msg_history.push(input);
-    msg_history.push(output);
+    var your_message = {
+      name: req.session.user,
+      text: input,
+      timestamp: moment().format("MMMM Do YYYY, h:mm:ss a")
+    }
+    var eliza_message = {
+      name: 'eliza',
+      text: output,
+      timestamp: moment().format("MMMM Do YYYY, h:mm:ss a")
+    }
+    msg_history.push(your_message);
+    msg_history.push(eliza_message);
     collection.insert({
       msg_history: msg_history,
       user: req.session.user,
@@ -387,11 +407,7 @@ exports.get_conv = function(req, res) {
         return res.status(200).json({
           status: 'Found conversation by id',
           can_continue: can_continue,
-          conversation: {
-            text: conv.msg_history,
-            timestamp: conv.start_date,
-            name: conv.user
-          }
+          conversation: conv.msg_history
         })
       } else {
         return res.status(200).json({
