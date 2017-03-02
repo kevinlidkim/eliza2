@@ -182,7 +182,7 @@ exports.add_user = function(req, res) {
             transporter.sendMail(mail_options, (error, info) => {
               if (!error) {
                 return res.status(200).json({
-                  status: 'Successfully create user'
+                  status: 'Successfully created user'
                 })
               } else {
                 return res.status(500).json({
@@ -478,7 +478,7 @@ exports.login = function(req, res) {
         } else {
           req.session.user = user.username;
           return res.status(200).json({
-            status: 'Successfully logged in',
+            status: 'OK',
             user: user.username
           })
         }

@@ -10,7 +10,7 @@ angular.module('UserServ', []).factory('UserService', ['$q', '$timeout', '$http'
         .then(function(data) {
           user = data.data.user;
           loggedIn = true;
-          // console.log(data);
+          console.log(data);
         })
         .catch(function(err) {
           console.log(err);

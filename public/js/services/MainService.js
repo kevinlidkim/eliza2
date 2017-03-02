@@ -42,17 +42,6 @@ angular.module('MainServ', []).factory('MainService', ['$q', '$timeout', '$http'
         .catch(function(err) {
           console.log(err);
         })
-    },
-
-    login : function(obj) {
-      return $http.post('/login', obj)
-        .then(function(data) {
-          // return data.data.user;
-          console.log(data);
-        })
-        .catch(function(err) {
-          console.log(err);
-        })
     }
     
   }
