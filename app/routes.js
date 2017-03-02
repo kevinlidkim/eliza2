@@ -8,6 +8,7 @@ module.exports = function(app) {
   app.post('/DOCTOR', users.send_text);
 
   app.post('/adduser', users.add_user);
+  app.post('/getconv', users.get_conv_test);
   app.post('/listall', users.list_all);
   app.post('/getall', users.get_all);
 
@@ -18,7 +19,7 @@ module.exports = function(app) {
   app.get('/status', users.auth);
 
   app.post('/listconv', users.list_conv);
-  app.post('/getconv', users.get_conv);
+  app.post('/getconv2', users.get_conv);
   app.get('/get_current_conv', users.get_current_conv);
 
   app.post('/listen', rabbit.listen);

@@ -558,3 +558,43 @@ exports.get_all = function(req, res) {
       })
     })
 }
+
+exports.get_conv_test = function(req, res) {
+  if (!req.session.user) {
+    return res.status(500).json({
+      status: 'No logged in user'
+    })
+  }
+  var collection = db.get().collection('conversations');
+  collection.findOne({
+    $and: [{ _id: ObjectId(req.body.id) }, { user: req.session.user }]
+  })
+    .then(function(conv) {
+      if (conv) {
+        var can_continue = false;
+        if (conv._id == req.session.conv) {
+          can_continue = true;
+        }
+        req.session.display_conv = conv._id;
+        return res.status(200).json({
+          status: 'Found conversation by id',
+          can_continue: can_continue,
+          conversation: [
+            {text: conv.msg_history,
+            timestamp: conv.start_date,
+            name: conv.user}
+          ]
+        })
+      } else {
+        return res.status(200).json({
+          status: 'No conversation found from ID'
+        })
+      }
+    })
+    .catch(function(err) {
+      console.log(err);
+      return res.status(500).json({
+        status: 'Error querying for conversation by id'
+      })
+    })
+}

@@ -71,7 +71,7 @@ angular.module('UserServ', []).factory('UserService', ['$q', '$timeout', '$http'
     },
 
     get_conv : function(obj) {
-      return $http.post('/getconv', obj)
+      return $http.post('/getconv2', obj)
         .then(function(data) {
           // console.log(data);
           return data;
