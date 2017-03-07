@@ -25,7 +25,7 @@ exports.listen = function(req, res) {
           return res.status(200).json({
             msg: message
           })
-        }, {noAck: false});
+        });
       });
     });
   });
