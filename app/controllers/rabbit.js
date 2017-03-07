@@ -2,6 +2,8 @@ var amqp = require('amqplib/callback_api');
 
 exports.listen = function(req, res) {
 
+  var already_returned = false;
+
   var args = req.body.keys;
 
   amqp.connect('amqp://localhost', function(err, conn) {
@@ -22,9 +24,12 @@ exports.listen = function(req, res) {
           console.log(" [x] Listening: Received %s: '%s'", msg.fields.routingKey, msg.content.toString());
 
           var message = msg.content.toString()
-          // return res.status(200).json({
-          //   msg: message
-          // })
+          if (!already_returned) {
+            already_returned == true;
+            return res.status(200).json({
+              msg: message
+            })
+          }
         });
       });
     });
