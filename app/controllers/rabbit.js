@@ -1,5 +1,13 @@
 var amqp = require('amqplib/callback_api');
 
+var callback = function(bool, message) {
+  if (bool) {
+    return res.status(200).json({
+      msg: message
+    })
+  }
+}
+
 exports.listen = function(req, res) {
 
   var already_returned = false;
@@ -24,15 +32,8 @@ exports.listen = function(req, res) {
           console.log(" [x] Listening: Received %s: '%s'", msg.fields.routingKey, msg.content.toString());
 
           var message = msg.content.toString()
-          if (!already_returned) {
-            already_returned == true;
-            console.log("Returning a response");
-            return res.status(200).json({
-              msg: message
-            })
-          } else {
-            console.log("Already returned a response");
-          }
+          callback(already_returned, message);
+          already_returned = false;
         });
       });
     });
