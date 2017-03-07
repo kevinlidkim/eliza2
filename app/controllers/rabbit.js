@@ -22,9 +22,9 @@ exports.listen = function(req, res) {
           console.log(" [x] Listening: Received %s: '%s'", msg.fields.routingKey, msg.content.toString());
 
           var message = msg.content.toString()
-          return res.status(200).json({
-            msg: message
-          })
+          // return res.status(200).json({
+          //   msg: message
+          // })
         });
       });
     });
