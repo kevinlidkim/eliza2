@@ -23,7 +23,7 @@ exports.listen = function(req, res) {
           return res.status(200).json({
             msg: msg.content.toString()
           })
-        }, {noAck: true});
+        }, {noAck: false});
       });
     });
   });
