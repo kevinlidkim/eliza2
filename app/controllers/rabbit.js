@@ -10,7 +10,7 @@ var callback = function(bool, message) {
 
 exports.listen = function(req, res) {
 
-  var already_returned = false;
+  var didnt_return = true;
 
   var args = req.body.keys;
 
@@ -33,7 +33,7 @@ exports.listen = function(req, res) {
 
           var message = msg.content.toString()
           callback(already_returned, message);
-          already_returned = false;
+          didnt_return = false;
         });
       });
     });
