@@ -20,8 +20,10 @@ exports.listen = function(req, res) {
 
         ch.consume(q.queue, function(msg) {
           console.log(" [x] Listening: Received %s: '%s'", msg.fields.routingKey, msg.content.toString());
+
+          var message = msg.content.toString()
           return res.status(200).json({
-            msg: msg.content.toString()
+            msg: message
           })
         }, {noAck: false});
       });
