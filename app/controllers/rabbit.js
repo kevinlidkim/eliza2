@@ -26,9 +26,12 @@ exports.listen = function(req, res) {
           var message = msg.content.toString()
           if (!already_returned) {
             already_returned == true;
+            console.log("Returning a response");
             return res.status(200).json({
               msg: message
             })
+          } else {
+            console.log("Already returned a response");
           }
         });
       });
