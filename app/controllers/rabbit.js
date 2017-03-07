@@ -8,7 +8,7 @@ exports.listen = function(req, res) {
     conn.createChannel(function(err, ch) {
       var ex = 'hw3';
 
-      ch.assertExchange(ex, 'direct', {durable: true});
+      ch.assertExchange(ex, 'direct', {durable: false});
 
       ch.assertQueue('', {exclusive: true}, function(err, q) {
         console.log(' [*] Waiting for logs. To exit press CTRL+C');
@@ -20,6 +20,9 @@ exports.listen = function(req, res) {
 
         ch.consume(q.queue, function(msg) {
           console.log(" [x] Listening: Received %s: '%s'", msg.fields.routingKey, msg.content.toString());
+          return res.status(200).json({
+            msg: msg.content.toString()
+          })
         }, {noAck: true});
       });
     });
@@ -35,7 +38,7 @@ exports.speak = function(req, res) {
       var key = req.body.key;
       var msg = req.body.msg;
 
-      ch.assertExchange(ex, 'direct', {durable: true});
+      ch.assertExchange(ex, 'direct', {durable: false});
       ch.publish(ex, key, new Buffer(msg));
       console.log(" [x] Speak sent %s: '%s'", key, msg);
 
