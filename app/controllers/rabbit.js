@@ -1,6 +1,7 @@
 var amqp = require('amqplib/callback_api');
 
-var callback = function(bool, message) {
+var callback = function(bool, message, res) {
+  console.log(bool);
   if (bool) {
     return res.status(200).json({
       msg: message
@@ -32,7 +33,7 @@ exports.listen = function(req, res) {
           console.log(" [x] Listening: Received %s: '%s'", msg.fields.routingKey, msg.content.toString());
 
           var message = msg.content.toString()
-          callback(didnt_return, message);
+          callback(didnt_return, message, res);
           didnt_return = false;
         });
       });
