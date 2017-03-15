@@ -2,6 +2,7 @@ module.exports = function(app) {
 
   var users = require('./controllers/users');
   var rabbit = require('./controllers/rabbit');
+  var cass = require('./controllers/cass');
 
   app.post('/eliza', users.submit_name);
   app.post('/eliza/DOCTOR', users.send_text);
@@ -24,6 +25,9 @@ module.exports = function(app) {
 
   app.post('/listen', rabbit.listen);
   app.post('/speak', rabbit.speak);
+
+  app.post('/deposit', cass.deposit);
+  app.post('/retrieve', cass.retrieve);
 
   app.get('*', function(req, res) {
     res.sendfile('./public/index.html');

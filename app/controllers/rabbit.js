@@ -1,7 +1,6 @@
 var amqp = require('amqplib/callback_api');
 
 var callback = function(bool, message, res) {
-  console.log(bool);
   if (bool) {
     return res.status(200).json({
       msg: message
