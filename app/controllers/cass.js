@@ -18,7 +18,7 @@ exports.deposit = function(req, res) {
       var file = req.body.filename;
       var cont = req.file.buffer;
 
-      console.log('DEPOSITING FILE');
+      console.log('DEPOSITING FILE ' + file);
       console.log('================');
       console.log('');
       console.log(req.file);
@@ -58,7 +58,7 @@ exports.retrieve = function(req, res) {
     } else {
       var data = result.rows[0].contents;
 
-      console.log('RETRIEVING FILE');
+      console.log('RETRIEVING FILE' + file);
       console.log('================');
       console.log('');
       console.log(data);
