@@ -58,20 +58,6 @@ exports.retrieve = function(req, res) {
     } else {
       var data = result.rows[0].contents;
 
-      // console.log('RETRIEVING FILE ' + file);
-      // console.log('================');
-      // console.log('');
-      // console.log(data);
-      // console.log('');
-
-      // fs.writeFile('file.png', data, 'binary', function(err) {
-      //   if (err) {
-      //     console.log(err);
-      //   } else {
-      //     console.log('written file');
-      //   }
-      // })
-
       var mimetype;
       if (file.includes('.png')) {
         res.set('Content-Type', 'image/png');
@@ -82,10 +68,6 @@ exports.retrieve = function(req, res) {
         res.header('Content-Type', 'image/jpg');
         mimetype = 'image/jpg';
       }
-
-      // res.status(200).json({
-      //   image: data
-      // })
 
       console.log('RETRIEVING FILE ' + file);
       console.log('================');
@@ -99,8 +81,6 @@ exports.retrieve = function(req, res) {
         'Content-Length': data.length
       });
       res.end(new Buffer(data, 'binary'));
-
-      // return res.sendFile(data);
     }
   })
 }
