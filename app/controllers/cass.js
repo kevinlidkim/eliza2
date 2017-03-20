@@ -72,12 +72,15 @@ exports.retrieve = function(req, res) {
       //   }
       // })
 
+      var mimetype;
       if (file.includes('.png')) {
         res.set('Content-Type', 'image/png');
         res.header('Content-Type', 'image/png');
+        mimetype = 'image/png';
       } else if (file.includes('.jpg')) {
         res.set('Content-Type', 'image/jpg');
         res.header('Content-Type', 'image/jpg');
+        mimetype = 'image/jpg';
       }
 
       // res.status(200).json({
@@ -92,7 +95,7 @@ exports.retrieve = function(req, res) {
 
       res.writeHead(200, {
         'Content-Type': mimetype,
-        'Content-disposition': 'attachment;filename=' + filename,
+        'Content-disposition': 'attachment;filename=' + file,
         'Content-Length': data.length
       });
       res.end(new Buffer(data, 'binary'));
