@@ -71,10 +71,15 @@ exports.retrieve = function(req, res) {
       //     console.log('written file');
       //   }
       // })
-      res.set('Content-Type', 'image/png');
-      res.header('Content-Type', 'image/png');
-      res.set('Content-Type', 'image/jpg');
-      res.header('Content-Type', 'image/jpg');
+
+      if (file.includes('.png')) {
+        res.set('Content-Type', 'image/png');
+        res.header('Content-Type', 'image/png');
+      } else if (file.includes('.jpg')) {
+        res.set('Content-Type', 'image/jpg');
+        res.header('Content-Type', 'image/jpg');
+      }
+
       res.status(200).json({
         image: data
       })
