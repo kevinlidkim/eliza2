@@ -82,7 +82,6 @@ exports.retrieve = function(req, res) {
       console.log('RETRIEVING FILE ' + file);
       console.log('================');
       console.log('');
-      console.log(res.header);
       console.log(data);
       console.log('');
 
