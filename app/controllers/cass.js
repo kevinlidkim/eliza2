@@ -58,11 +58,11 @@ exports.retrieve = function(req, res) {
     } else {
       var data = result.rows[0].contents;
 
-      console.log('RETRIEVING FILE' + file);
-      console.log('================');
-      console.log('');
-      console.log(data);
-      console.log('');
+      // console.log('RETRIEVING FILE ' + file);
+      // console.log('================');
+      // console.log('');
+      // console.log(data);
+      // console.log('');
 
       // fs.writeFile('file.png', data, 'binary', function(err) {
       //   if (err) {
@@ -73,9 +73,19 @@ exports.retrieve = function(req, res) {
       // })
       res.set('Content-Type', 'image/png');
       res.header('Content-Type', 'image/png');
-      return res.status(200).json({
+      res.set('Content-Type', 'image/jpg');
+      res.header('Content-Type', 'image/jpg');
+      res.status(200).json({
         image: data
       })
+
+      console.log('RETRIEVING FILE ' + file);
+      console.log('================');
+      console.log('');
+      console.log(res);
+      console.log('');
+
+      return res;
     }
   })
 }
