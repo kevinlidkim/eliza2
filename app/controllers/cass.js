@@ -80,9 +80,9 @@ exports.retrieve = function(req, res) {
         res.header('Content-Type', 'image/jpg');
       }
 
-      res.status(200).json({
-        image: data
-      })
+      // res.status(200).json({
+      //   image: data
+      // })
 
       console.log('RETRIEVING FILE ' + file);
       console.log('================');
@@ -90,7 +90,7 @@ exports.retrieve = function(req, res) {
       console.log(data);
       console.log('');
 
-      return res;
+      return res.sendFile(data);
     }
   })
 }
