@@ -90,7 +90,14 @@ exports.retrieve = function(req, res) {
       console.log(data);
       console.log('');
 
-      return res.sendFile(data);
+      res.writeHead(200, {
+        'Content-Type': mimetype,
+        'Content-disposition': 'attachment;filename=' + filename,
+        'Content-Length': data.length
+      });
+      res.end(new Buffer(data, 'binary'));
+
+      // return res.sendFile(data);
     }
   })
 }
