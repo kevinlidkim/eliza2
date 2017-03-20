@@ -4,6 +4,9 @@ module.exports = function(app) {
   var rabbit = require('./controllers/rabbit');
   var cass = require('./controllers/cass');
 
+  var multer = require('multer');
+  var upload = multer();
+
   app.post('/eliza', users.submit_name);
   app.post('/eliza/DOCTOR', users.send_text);
   app.post('/DOCTOR', users.send_text);
@@ -27,7 +30,7 @@ module.exports = function(app) {
   app.post('/speak', rabbit.speak);
 
   app.post('/deposit', cass.deposit);
-  app.post('/retrieve', cass.retrieve);
+  app.get('/retrieve', cass.retrieve);
 
   app.get('*', function(req, res) {
     res.sendfile('./public/index.html');

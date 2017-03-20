@@ -1,28 +1,38 @@
 var cassandra = require('cassandra-driver');
-
-// var client = new cassandra.Client({contactPoint : ['127.0.0.1']});
-// client.connect(function(err,result){
-//     consolde.log('cassandra connected')
-// });
-
 var client = new cassandra.Client({ contactPoints: ['127.0.0.1'], keyspace: 'hw4' });
+
+var multer = require('multer');
+var upload = multer().single('contents');
+
+var fs = require('fs');
 
 exports.deposit = function(req, res) {
 
-  var file = req.body.filename;
-  var cont = req.body.contents;
-
-  var query = 'INSERT INTO imgs (filename, contents) VALUES (?, ?)';
-
-  client.execute(query, [file, cont], function(err, result) {
+  upload(req, res, function(err) {
     if (err) {
       console.log(err);
       return res.status(404).json({
-        status: "Couldn't deposit file"
+        status: 'Failed to upload file'
       })
     } else {
-      return res.status(200).json({
-        status: 'Successfully deposited file'
+      var file = req.body.filename;
+      var cont = req.file.buffer;
+
+      console.log(req.file);
+
+      var query = 'INSERT INTO imgs (filename, contents) VALUES (?, ?)';
+
+      client.execute(query, [file, cont], function(err, result) {
+        if (err) {
+          console.log(err);
+          return res.status(404).json({
+            status: "Couldn't deposit file"
+          })
+        } else {
+          return res.status(200).json({
+            status: 'Successfully deposited file'
+          })
+        }
       })
     }
   })
@@ -31,7 +41,7 @@ exports.deposit = function(req, res) {
 
 exports.retrieve = function(req, res) {
 
-  var file = req.body.filename;
+  var file = req.query.filename;
 
   var query = 'SELECT contents FROM imgs WHERE filename = ?';
 
@@ -42,9 +52,18 @@ exports.retrieve = function(req, res) {
         status: "Couldn't retrieve file"
       })
     } else {
-      var data = result.rows;
+      var data = result.rows[0].contents;
+
+      fs.writeFile('file.png', data, 'binary', function(err) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('written file');
+        }
+      })
+      res.set('Content-Type', 'image/png');
       return res.status(200).json({
-        data: data
+        image: data
       })
     }
   })
