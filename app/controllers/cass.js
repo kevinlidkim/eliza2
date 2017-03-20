@@ -18,7 +18,11 @@ exports.deposit = function(req, res) {
       var file = req.body.filename;
       var cont = req.file.buffer;
 
+      console.log('DEPOSITING FILE');
+      console.log('================');
+      console.log('');
       console.log(req.file);
+      console.log('');
 
       var query = 'INSERT INTO imgs (filename, contents) VALUES (?, ?)';
 
@@ -54,14 +58,21 @@ exports.retrieve = function(req, res) {
     } else {
       var data = result.rows[0].contents;
 
-      fs.writeFile('file.png', data, 'binary', function(err) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log('written file');
-        }
-      })
+      console.log('RETRIEVING FILE');
+      console.log('================');
+      console.log('');
+      console.log(data);
+      console.log('');
+
+      // fs.writeFile('file.png', data, 'binary', function(err) {
+      //   if (err) {
+      //     console.log(err);
+      //   } else {
+      //     console.log('written file');
+      //   }
+      // })
       res.set('Content-Type', 'image/png');
+      res.header('Content-Type', 'image/png');
       return res.status(200).json({
         image: data
       })
